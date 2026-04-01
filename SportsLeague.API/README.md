@@ -1,0 +1,1 @@
+﻿Modified base project for sponsors
