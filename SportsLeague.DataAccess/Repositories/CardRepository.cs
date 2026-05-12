@@ -22,7 +22,7 @@ namespace SportsLeague.DataAccess.Repositories
             return await _dbSet
                 .Where(c => c.MatchId == matchId)
                 .Include(c => c.Player)
-                //.ThenInclude(p => p.Team)
+                .ThenInclude(p => p.Team)
                 //.ThenInclude(t => t.TournamentTeams)
                 //.ThenInclude(tt => tt.Tournament)
                 .OrderBy(c => c.Minute)

@@ -204,11 +204,11 @@ namespace SportsLeague.Domain.Services
                 .GroupBy(c => new { c.PlayerId, c.Player.FirstName, c.Player.LastName })
                 .Select(group => new
                 {
-                    PlayerId = group.Key.PlayerId,
+                    group.Key.PlayerId,
                     PlayerName = group.Key.FirstName + " " + group.Key.LastName,
                     TeamName = group.First().Player.Team?.Name ?? "N/A",
-                    YellowCards = group.Count(c => c.Type == Enums.CardType.Yellow),
-                    RedCards = group.Count(c => c.Type == Enums.CardType.Red),
+                    YellowCards = group.Count(c => c.Type == CardType.Yellow),
+                    RedCards = group.Count(c => c.Type == CardType.Red),
                     TotalCards = group.Count()
                 })
                 .OrderByDescending(s => s.RedCards)
