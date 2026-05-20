@@ -20,7 +20,7 @@ namespace SportsLeague.Domain.Entities
 
         public DateTime? UpdatedAt { get; set; }
 
-        // relacion N:M
+        // reElacion N:M
         public ICollection<TournamentSponsor> TournamentSponsors { get; set; } = new List<TournamentSponsor>();
     }
 }
