@@ -27,6 +27,7 @@ builder.Services.AddScoped<IGoalRepository, GoalRepository>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<ISponsorRepository, SponsorRepository>();
 builder.Services.AddScoped<ITournamentSponsorRepository, TournamentSponsorRepository>();
+builder.Services.AddScoped<IMatchLineupRepository, MatchLineupRepository>(); 
 
 // ── Services ──
 builder.Services.AddScoped<ITeamService, TeamService>();
@@ -39,6 +40,7 @@ builder.Services.AddScoped<MatchValidationHelper>();
 builder.Services.AddScoped<IStandingsService, StandingsService>();
 builder.Services.AddScoped<ISponsorService, SponsorService>();
 builder.Services.AddScoped<ITournamentSponsorService, TournamentSponsorService>();
+builder.Services.AddScoped<IMatchLineupService, MatchLineupService>(); 
 
 // ── AutoMapper ──
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
@@ -64,5 +66,25 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+// ── POBLACION DE DATOS CON DATASEEDER ──
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        // Obtenemos el contexto de la base de datos ya registrado
+        var context = services.GetRequiredService<LeagueDbContext>();
+
+        // Ejecutamos el Seeder de forma asíncrona y esperamos a que termine (.GetAwaiter().GetResult())
+        DataSeeder.SeedAsync(context).GetAwaiter().GetResult();
+    }
+    catch (Exception ex)
+    {
+        // En caso de que falte alguna propiedad o falle una restricción, lo capturamos en la consola
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocurrió un error inesperado al poblar la base de datos.");
+    }
+}
 
 app.Run();
